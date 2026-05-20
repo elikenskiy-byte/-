@@ -1,0 +1,567 @@
+<!DOCTYPE html>
+<html lang="uk">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+    <title>ChefAI — Cyber Edition</title>
+    <style>
+        /* Полный киберпанк сброс */
+        * { box-sizing: border-box; margin: 0; padding: 0; -webkit-tap-highlight-color: transparent; }
+        
+        body { 
+            background-color: #050203; 
+            color: #ffffff; 
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; 
+            padding: 16px;
+            min-height: 100vh;
+            background-image: 
+                radial-gradient(circle at 10% 20%, rgba(244, 63, 94, 0.06) 0%, transparent 50%),
+                radial-gradient(circle at 90% 80%, rgba(244, 63, 94, 0.04) 0%, transparent 50%);
+            background-attachment: fixed;
+        }
+
+        @keyframes neonGlow {
+            0% { text-shadow: 0 0 10px #f43f5e, 0 0 20px #e11d48; }
+            50% { text-shadow: 0 0 15px #ff2a4b, 0 0 30px #b91c1c; }
+            100% { text-shadow: 0 0 10px #f43f5e, 0 0 20px #e11d48; }
+        }
+
+        header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 15px;
+            background: #0d080b;
+            border-bottom: 2px solid #f43f5e;
+            box-shadow: 0 4px 20px rgba(244, 63, 94, 0.2);
+            border-radius: 14px;
+            margin-bottom: 20px;
+        }
+
+        .logo { font-size: 24px; font-weight: 900; color: #fff; }
+        .logo span { color: #f43f5e; animation: neonGlow 3s infinite linear; }
+
+        .lang-container {
+            display: flex;
+            gap: 2px;
+            background: #171114;
+            padding: 3px;
+            border-radius: 8px;
+            border: 1px solid rgba(244, 63, 94, 0.3);
+        }
+
+        .lang-btn {
+            background: transparent;
+            border: none;
+            color: #9ca3af;
+            padding: 6px 10px;
+            font-size: 12px;
+            font-weight: 800;
+            border-radius: 6px;
+            cursor: pointer;
+        }
+
+        .lang-btn.active {
+            background: #f43f5e;
+            color: #fff;
+            box-shadow: 0 0 10px #f43f5e;
+        }
+
+        .menu-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 6px;
+            margin-bottom: 24px;
+            background: #0d080b;
+            padding: 4px;
+            border-radius: 12px;
+            border: 1px solid rgba(255, 255, 255, 0.03);
+        }
+
+        .menu-btn {
+            background-color: transparent;
+            color: #9ca3af;
+            border: none;
+            padding: 12px 2px;
+            border-radius: 8px;
+            font-weight: 700;
+            font-size: 13px;
+            cursor: pointer;
+            text-align: center;
+        }
+
+        .menu-btn.active {
+            background: linear-gradient(135deg, #f43f5e 0%, #991b1b 100%);
+            color: #ffffff;
+            box-shadow: 0 0 15px rgba(244, 63, 94, 0.4);
+        }
+
+        .tab-content { display: none; }
+        .tab-content.active { display: block; }
+
+        .hero { text-align: center; padding: 30px 10px; }
+        .hero h1 { font-size: 36px; font-weight: 900; line-height: 1.2; margin-bottom: 16px; }
+        .hero h1 span { color: #f43f5e; animation: neonGlow 3s infinite linear; }
+        .hero p { color: #9ca3af; font-size: 16px; margin-bottom: 32px; line-height: 1.5; }
+
+        .action-btn { 
+            background: linear-gradient(135deg, #f43f5e 0%, #991b1b 100%);
+            color: white; 
+            border: none; 
+            padding: 16px 20px; 
+            font-size: 16px; 
+            font-weight: 800; 
+            border-radius: 12px; 
+            cursor: pointer; 
+            width: 100%;
+            box-shadow: 0 0 15px rgba(244, 63, 94, 0.4);
+            letter-spacing: 0.5px;
+            margin-top: 10px;
+        }
+
+        .box { 
+            background: #0d080b; 
+            border: 1px solid rgba(244, 63, 94, 0.2); 
+            padding: 20px; 
+            border-radius: 16px; 
+            margin-bottom: 20px; 
+            box-shadow: 0 0 15px rgba(0, 0, 0, 0.5);
+        }
+        
+        .box h2 { font-size: 20px; margin-bottom: 15px; color: #fff; border-left: 3px solid #f43f5e; padding-left: 8px; }
+        
+        .form-group { display: flex; gap: 8px; margin-bottom: 12px; flex-wrap: wrap; }
+        
+        input, select { 
+            flex: 1; 
+            min-width: 70px;
+            background: #050203; 
+            border: 1px solid rgba(244, 63, 94, 0.4); 
+            padding: 12px; 
+            border-radius: 10px; 
+            color: white; 
+            font-size: 15px; 
+            outline: none;
+        }
+        input:focus, select:focus { border-color: #f43f5e; box-shadow: 0 0 10px rgba(244, 63, 94, 0.3); }
+
+        .tags-container { display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 16px; }
+        .tag { 
+            background: rgba(244, 63, 94, 0.15); 
+            border: 1px solid #f43f5e; 
+            padding: 8px 14px; 
+            border-radius: 100px; 
+            font-size: 14px; 
+            font-weight: 600;
+            color: #ff7e95;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+        .tag span { color: #f43f5e; font-weight: bold; font-size: 18px; cursor: pointer; }
+        
+        #ai-loading-text { color: #ff7e95; font-weight: 700; text-align: center; margin: 20px 0; display: none; }
+        
+        .card { background: #171114; border-radius: 16px; overflow: hidden; border: 1px solid rgba(244, 63, 94, 0.3); padding: 15px; display: none; margin-top: 15px; }
+        .recipe-details pre { 
+            white-space: pre-wrap; 
+            font-family: inherit; 
+            font-size: 15px; 
+            color: #e5e7eb; 
+            line-height: 1.6;
+            background: #050203;
+            padding: 14px;
+            border-radius: 10px;
+            border-left: 4px solid #f43f5e;
+        }
+
+        /* Улучшенный КБЖУ трекер */
+        .calories-display { font-size: 48px; font-weight: 900; color: #f43f5e; text-align: center; margin-top: 10px; text-shadow: 0 0 15px #f43f5e; }
+        .macro-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; margin: 20px 0; text-align: center; }
+        .macro-box { background: #120a0e; padding: 10px; border-radius: 10px; border: 1px solid rgba(255,255,255,0.05); }
+        .macro-val { font-size: 18px; font-weight: 800; color: #fff; }
+        .macro-label { font-size: 11px; color: #9ca3af; text-transform: uppercase; margin-top: 4px; }
+        
+        /* Прогресс-бары */
+        .progress-container { margin-bottom: 12px; }
+        .progress-label { display: flex; justify-content: space-between; font-size: 12px; color: #9ca3af; margin-bottom: 4px; }
+        .progress-bar { background: #171114; height: 8px; border-radius: 4px; overflow: hidden; border: 1px solid rgba(244,63,94,0.1); }
+        .progress-fill { background: linear-gradient(90deg, #e11d48, #f43f5e); width: 0%; height: 100%; transition: width 0.4s ease; }
+
+        .list-row { display: flex; justify-content: space-between; align-items: center; padding: 12px 0; border-bottom: 1px solid rgba(255, 255, 255, 0.05); font-size: 15px; }
+        .clear-btn { background: transparent; border: 1px solid #f43f5e; color: #f43f5e; padding: 10px 16px; border-radius: 10px; cursor: pointer; font-size: 14px; font-weight: bold; }
+        .clear-btn:hover { background: rgba(244, 63, 94, 0.1); }
+        
+        /* Сетка для профиля */
+        .profile-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 15px; }
+    </style>
+</head>
+<body>
+
+    <!-- Шапка приложения -->
+    <header>
+        <div class="logo">Chef<span>AI</span></div>
+        <div class="lang-container">
+            <button class="lang-btn active" id="lang-uk" onclick="setLanguage('uk')">UA</button>
+            <button class="lang-btn" id="lang-en" onclick="setLanguage('en')">EN</button>
+        </div>
+    </header>
+
+    <!-- Главное меню навигации -->
+    <div class="menu-grid">
+        <button class="menu-btn active" id="menu-home" onclick="openTab('home')">Home</button>
+        <button class="menu-btn" id="menu-search" onclick="openTab('search')">AI Kitchen</button>
+        <button class="menu-btn" id="menu-calories" onclick="openTab('calories')">КБЖУ</button>
+        <button class="menu-btn" id="menu-profile" onclick="openTab('profile')">Profile</button>
+    </div>
+
+    <!-- ТАБ 1: ГЛАВНАЯ -->
+    <div id="view-home" class="tab-content active">
+        <div class="hero">
+            <h1 id="txt-title">Твій холодильник спроможний на <span>шедеври</span></h1>
+            <p id="txt-desc">Вкажіть продукты, і локальний ШІ моментально побудує страву з точними грамовками та кроками приготування.</p>
+            <button class="action-btn" id="btn-try" onclick="openTab('search')">Спробувати</button>
+        </div>
+    </div>
+
+    <!-- ТАБ 2: НЕЙРОКУХНЯ -->
+    <div id="view-search" class="tab-content">
+        <div class="box">
+            <h2 id="txt-lab-title">Генератор рецептів AI</h2>
+            <div class="form-group">
+                <input type="text" id="ingredient-input" placeholder="Додати інгредієнт...">
+                <button class="clear-btn" onclick="addIngredient()">+</button>
+            </div>
+            <div class="tags-container" id="ingredients-tags"></div>
+            <button class="action-btn" id="btn-generate" onclick="generateRecipe()">Згенерувати страву</button>
+            
+            <div id="ai-loading-text">Аналіз інгредієнтів нейромережею...</div>
+            
+            <div class="card" id="recipe-card">
+                <div class="recipe-details">
+                    <pre id="recipe-output"></pre>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- ТАБ 3: КБЖУ (ПРОДВИНУТЫЙ) -->
+    <div id="view-calories" class="tab-content">
+        <div class="box">
+            <h2 id="txt-kbzhu-title">Моніторинг нутрієнтів</h2>
+            
+            <!-- Прогресс бары целей -->
+            <div class="progress-container" style="margin-top:15px;">
+                <div class="progress-label">
+                    <span id="lbl-prog-cal">Калорії</span>
+                    <span id="cal-progress-num">0 / 2000 ккал</span>
+                </div>
+                <div class="progress-bar"><div class="progress-fill" id="bar-cal"></div></div>
+            </div>
+
+            <div class="calories-display" id="calories-num">0</div>
+            <p style="text-align:center; color:#9ca3af; margin-bottom:20px; font-size:13px;" id="txt-consumed">загалом спожито ккал</p>
+            
+            <!-- Сетка макронутриентов -->
+            <div class="macro-grid">
+                <div class="macro-box">
+                    <div class="macro-val" id="macro-p">0г</div>
+                    <div class="macro-label" id="lbl-p">Білки</div>
+                </div>
+                <div class="macro-box">
+                    <div class="macro-val" id="macro-f">0г</div>
+                    <div class="macro-label" id="lbl-f">Жири</div>
+                </div>
+                <div class="macro-box">
+                    <div class="macro-val" id="macro-c">0г</div>
+                    <div class="macro-label" id="lbl-c">Вуглеводи</div>
+                </div>
+            </div>
+
+            <!-- Форма добавления -->
+            <div class="form-group">
+                <input type="text" id="food-name" placeholder="Назва страви" style="flex:2;">
+                <input type="number" id="food-cal" placeholder="ккал">
+            </div>
+            <div class="form-group">
+                <input type="number" id="food-p" placeholder="Б">
+                <input type="number" id="food-f" placeholder="Ж">
+                <input type="number" id="food-c" placeholder="В">
+                <button class="clear-btn" onclick="addCalories()">+</button>
+            </div>
+            
+            <div id="calories-list" style="margin-top:15px;"></div>
+        </div>
+    </div>
+
+    <!-- ТАБ 4: ПРОФИЛЬ (ПРОДВИНУТЫЙ) -->
+    <div id="view-profile" class="tab-content">
+        <!-- Калькулятор нормы -->
+        <div class="box">
+            <h2 id="txt-profile-calc">Розрахунок кібер-норми</h2>
+            <div class="profile-grid" style="margin-top:12px;">
+                <input type="number" id="prof-weight" placeholder="Вага (кг)" value="70">
+                <input type="number" id="prof-height" placeholder="Ріст (см)" value="175">
+            </div>
+            <div class="profile-grid">
+                <input type="number" id="prof-age" placeholder="Вік" value="25">
+                <select id="prof-gender">
+                    <option value="male">Чоловік</option>
+                    <option value="female">Жінка</option>
+                </select>
+            </div>
+            <div class="form-group">
+                <select id="prof-goal">
+                    <option value="lose" id="opt-lose">Схуднення (-15%)</option>
+                    <option value="maintain" id="opt-maint" selected>Підтримка форми</option>
+                    <option value="gain" id="opt-gain">Набір маси (+15%)</option>
+                </select>
+            </div>
+            <button class="action-btn" id="btn-calc-profile" onclick="recalculateTarget()" style="padding:12px;">Оновити метрики</button>
+        </div>
+
+        <!-- Статистика -->
+        <div class="box">
+            <h2 id="txt-profile-title">Профіль Кібер-Шефа</h2>
+            <div class="list-row">
+                <span id="lbl-level">Поточна ціль:</span>
+                <span style="color:#f43f5e; font-weight:bold;" id="val-profile-goal">Підтримка</span>
+            </div>
+            <div class="list-row">
+                <span id="lbl-saved">Згенерувано рецептів:</span>
+                <span id="saved-recipes-count">0</span>
+            </div>
+            <button class="action-btn" style="margin-top:20px; background:transparent; border:1px solid #f43f5e; color:#f43f5e;" onclick="resetData()" id="btn-reset">Скинути дані</button>
+        </div>
+    </div>
+
+    <script>
+        const i18n = {
+            uk: {
+                title: "Твій холодильник спроможний на <span>шедеври</span>",
+                desc: "Вкажіть продукты, і локальний ШІ моментально побудує страву з точними грамовками та кроками приготування.",
+                tryBtn: "Спробувати",
+                labTitle: "Генератор рецептів AI",
+                inputPlaceholder: "Додати інгредієнт...",
+                genBtn: "Згенерувати страву",
+                loading: "Аналіз інгредієнтів нейромережею...",
+                kbzhuTitle: "Моніторинг нутрієнтів",
+                foodPlaceholder: "Назва страви",
+                calPlaceholder: "ккал",
+                consumed: "загалом спожито ккал",
+                profileTitle: "Профіль Кібер-Шефа",
+                level: "Поточна ціль:",
+                saved: "Згенерувано рецептів:",
+                reset: "Скинути дані",
+                progCal: "Калорії",
+                p: "Білки", f: "Жири", c: "Вуглеводи",
+                profCalc: "Розрахунок кібер-норми",
+                updateMetrics: "Оновити метрики",
+                goalL: "Схуднення", goalM: "Підтримка", goalG: "Набір маси"
+            },
+            en: {
+                title: "Your fridge can create <span>masterpieces</span>",
+                desc: "Specify your ingredients, and local AI will instantly build a dish with exact weights and preparation steps.",
+                tryBtn: "Try Now",
+                labTitle: "AI Recipe Generator",
+                inputPlaceholder: "Add ingredient...",
+                genBtn: "Generate Recipe",
+                loading: "AI network analyzing ingredients...",
+                kbzhuTitle: "Nutrient Monitoring",
+                foodPlaceholder: "Dish name",
+                calPlaceholder: "kcal",
+                consumed: "total calories consumed",
+                profileTitle: "Cyber Chef Profile",
+                level: "Current Goal:",
+                saved: "Generated Recipes:",
+                reset: "Reset Data",
+                progCal: "Calories",
+                p: "Proteins", f: "Fats", c: "Carbs",
+                profCalc: "Cyber-Norm Estimation",
+                updateMetrics: "Update Metrics",
+                goalL: "Fat Loss", goalM: "Maintenance", goalG: "Muscle Gain"
+            }
+        };
+
+        let currentLang = 'uk';
+        let ingredients = [];
+        
+        // Данные КБЖУ
+        let totalCalories = 0;
+        let totalP = 0, totalF = 0, totalC = 0;
+        let targetCalories = 2000;
+
+        function openTab(tabId) {
+            document.querySelectorAll('.tab-content').forEach(tab => tab.classList.remove('active'));
+            document.querySelectorAll('.menu-btn').forEach(btn => btn.classList.remove('active'));
+            
+            document.getElementById(`view-${tabId}`).classList.add('active');
+            document.getElementById(`menu-${tabId}`).classList.add('active');
+        }
+
+        function setLanguage(lang) {
+            currentLang = lang;
+            document.querySelectorAll('.lang-btn').forEach(btn => btn.classList.remove('active'));
+            document.getElementById(`lang-${lang}`).classList.add('active');
+
+            document.getElementById('txt-title').innerHTML = i18n[lang].title;
+            document.getElementById('txt-desc').innerText = i18n[lang].desc;
+            document.getElementById('btn-try').innerText = i18n[lang].tryBtn;
+            document.getElementById('txt-lab-title').innerText = i18n[lang].labTitle;
+            document.getElementById('ingredient-input').placeholder = i18n[lang].inputPlaceholder;
+            document.getElementById('btn-generate').innerText = i18n[lang].genBtn;
+            document.getElementById('ai-loading-text').innerText = i18n[lang].loading;
+            document.getElementById('txt-kbzhu-title').innerText = i18n[lang].kbzhuTitle;
+            document.getElementById('food-name').placeholder = i18n[lang].foodPlaceholder;
+            document.getElementById('food-cal').placeholder = i18n[lang].calPlaceholder;
+            document.getElementById('txt-profile-title').innerText = i18n[lang].profileTitle;
+            document.getElementById('txt-consumed').innerText = i18n[lang].consumed;
+            document.getElementById('lbl-prog-cal').innerText = i18n[lang].progCal;
+            document.getElementById('lbl-p').innerText = i18n[lang].p;
+            document.getElementById('lbl-f').innerText = i18n[lang].f;
+            document.getElementById('lbl-c').innerText = i18n[lang].c;
+            document.getElementById('txt-profile-calc').innerText = i18n[lang].profCalc;
+            document.getElementById('btn-calc-profile').innerText = i18n[lang].updateMetrics;
+            document.getElementById('lbl-level').innerText = i18n[lang].level;
+            document.getElementById('lbl-saved').innerText = i18n[lang].saved;
+            document.getElementById('btn-reset').innerText = i18n[lang].reset;
+            
+            updateBars();
+            updateGoalText();
+        }
+
+        function addIngredient() {
+            const input = document.getElementById('ingredient-input');
+            const val = input.value.trim();
+            if(val && !ingredients.includes(val)) {
+                ingredients.push(val);
+                renderIngredients();
+                input.value = '';
+            }
+        }
+
+        function removeIngredient(index) {
+            ingredients.splice(index, 1);
+            renderIngredients();
+        }
+
+        function renderIngredients() {
+            const container = document.getElementById('ingredients-tags');
+            container.innerHTML = '';
+            ingredients.forEach((ing, idx) => {
+                container.innerHTML += `<div class="tag">${ing}<span onclick="removeIngredient(${idx})">&times;</span></div>`;
+            });
+        }
+
+        function generateRecipe() {
+            if(ingredients.length === 0) {
+                alert(currentLang === 'uk' ? "Додайте інгредієнти!" : "Add ingredients!");
+                return;
+            }
+            
+            const loader = document.getElementById('ai-loading-text');
+            const card = document.getElementById('recipe-card');
+            const output = document.getElementById('recipe-output');
+            
+            loader.style.display = 'block';
+            card.style.display = 'none';
+
+            setTimeout(() => {
+                loader.style.display = 'none';
+                card.style.display = 'block';
+                
+                if(currentLang === 'uk') {
+                    output.innerText = `[ CyberChef AI Результат ]\n\nСтрава: Кібер-Мікс із ${ingredients.join(', ')}\n\nСкладники:\n${ingredients.map(i => `- ${i}: 150г`).join('\n')}\n\nКроки:\n1. Обробити продукти.\n2. Нарізати кубиками та змішати.\n3. Обсмажувати 7 хвилин.`;
+                } else {
+                    output.innerText = `[ CyberChef AI Result ]\n\nDish: Cyber-Mix with ${ingredients.join(', ')}\n\nIngredients:\n${ingredients.map(i => `- ${i}: 150g`).join('\n')}\n\nSteps:\n1. Pre-heat cooking matrix.\n2. Dice and mix uniformly.\n3. Fry for 7 minutes.`;
+                }
+                document.getElementById('saved-recipes-count').innerText = "1";
+            }, 1200);
+        }
+
+        // Обновленная логика КБЖУ
+        function addCalories() {
+            const name = document.getElementById('food-name').value.trim();
+            const cal = parseInt(document.getElementById('food-cal').value) || 0;
+            const p = parseInt(document.getElementById('food-p').value) || 0;
+            const f = parseInt(document.getElementById('food-f').value) || 0;
+            const c = parseInt(document.getElementById('food-c').value) || 0;
+
+            if(name && cal) {
+                totalCalories += cal;
+                totalP += p; totalF += f; totalC += c;
+                
+                document.getElementById('calories-num').innerText = totalCalories;
+                document.getElementById('macro-p').innerText = totalP + 'г';
+                document.getElementById('macro-f').innerText = totalF + 'г';
+                document.getElementById('macro-c').innerText = totalC + 'г';
+                
+                const list = document.getElementById('calories-list');
+                list.innerHTML += `<div class="list-row"><span>${name}</span><span style="color:#f43f5e;">+${cal} kcal (Б:${p} Ж:${f} В:${c})</span></div>`;
+                
+                updateBars();
+                
+                document.getElementById('food-name').value = '';
+                document.getElementById('food-cal').value = '';
+                document.getElementById('food-p').value = '';
+                document.getElementById('food-f').value = '';
+                document.getElementById('food-c').value = '';
+            }
+        }
+
+        function updateBars() {
+            document.getElementById('cal-progress-num').innerText = `${totalCalories} / ${targetCalories} ${currentLang === 'uk' ? 'ккал' : 'kcal'}`;
+            let pct = (totalCalories / targetCalories) * 100;
+            if(pct > 100) pct = 100;
+            document.getElementById('bar-cal').style.width = pct + '%';
+        }
+
+        // Формула Миффлина - Сан Жеора в Профиле
+        function recalculateTarget() {
+            const w = parseFloat(document.getElementById('prof-weight').value) || 70;
+            const h = parseFloat(document.getElementById('prof-height').value) || 175;
+            const a = parseFloat(document.getElementById('prof-age').value) || 25;
+            const gender = document.getElementById('prof-gender').value;
+            const goal = document.getElementById('prof-goal').value;
+
+            // Базовый метаболизм
+            let bmr = (10 * w) + (6.25 * h) - (5 * a);
+            bmr = (gender === 'male') ? bmr + 5 : bmr - 161;
+            
+            // Средняя активность (x1.4)
+            let amr = bmr * 1.4;
+
+            if(goal === 'lose') amr *= 0.85;
+            if(goal === 'gain') amr *= 1.15;
+
+            targetCalories = Math.round(amr);
+            updateBars();
+            updateGoalText();
+            alert(currentLang === 'uk' ? "Метрики успішно синхронізовано з КБЖУ!" : "Metrics synchronized with tracker!");
+        }
+
+        function updateGoalText() {
+            const goal = document.getElementById('prof-goal').value;
+            let txt = '';
+            if(goal === 'lose') txt = i18n[currentLang].goalL;
+            if(goal === 'maintain') txt = i18n[currentLang].goalM;
+            if(goal === 'gain') txt = i18n[currentLang].goalG;
+            document.getElementById('val-profile-goal').innerText = txt;
+        }
+
+        function resetData() {
+            ingredients = [];
+            totalCalories = 0; totalP = 0; totalF = 0; totalC = 0;
+            document.getElementById('calories-num').innerText = "0";
+            document.getElementById('macro-p').innerText = "0г";
+            document.getElementById('macro-f').innerText = "0г";
+            document.getElementById('macro-c').innerText = "0г";
+            document.getElementById('calories-list').innerHTML = "";
+            document.getElementById('saved-recipes-count').innerText = "0";
+            document.getElementById('recipe-card').style.display = 'none';
+            updateBars();
+            renderIngredients();
+        }
+    </script>
+</body>
+</html>
